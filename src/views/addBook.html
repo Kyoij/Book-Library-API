@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Library</title>
+  </head>
+  <body>
+    <form>
+      <label for="name">name:</label>
+      <input type="text" name="" id="name" />
+      <br />
+      <label for="author">author:</label>
+      <input type="text" id="author" />
+      <button type="submit">Add</button>
+    </form>
+    <p id="noti">...</p>
+    <script>
+      document.forms[0].onsubmit = (e) => {
+        e.preventDefault();
+        if (e.target.name.value === "") return show("name");
+        if (e.target.author.value === "") return show("author");
+
+        let myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+        let urlencoded = new URLSearchParams();
+        urlencoded.append("name", e.target.name.value);
+        urlencoded.append("author", e.target.author.value);
+
+        let requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: urlencoded,
+          redirect: "follow",
+        };
+        fetch("/api/books/add", requestOptions)
+          .then((res) => res.text())
+          .then(show);
+      };
+
+      function show(s) {
+        document.getElementById("noti").innerText = s;
+        setTimeout(() => {
+          document.getElementById("noti").innerText = "...";
+        }, 1000);
+      }
+    </script>
+  </body>
+</html>
