@@ -7,7 +7,6 @@ const BookSchema = new Schema({
 });
 
 const Book = model("books", BookSchema);
-
 export type BookDocument<T = any> = Document<T> & { name: string; author: string; content: any[] };
 
 export default Book;

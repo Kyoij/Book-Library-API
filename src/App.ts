@@ -1,10 +1,11 @@
 import { mongo_url } from "./config/index.config";
-import Express, { Application, urlencoded } from "express";
+import Express, { Application, json, urlencoded } from "express";
 import cors from "cors";
 import notFound from "./middlewares/notFound.middleware";
 import mongoose from "mongoose";
 import bookRoute from "./routes/book.route";
 import { emitWarning } from "process";
+import userRoute from "./routes/user.route";
 
 export default class Server {
   private app: Application;
@@ -19,13 +20,14 @@ export default class Server {
 
   private settings() {
     mongoose.connect(mongo_url, { useUnifiedTopology: true, useNewUrlParser: true }, () =>
-      console.log("✅ connected mongoDB")
+      console.log("✅ connected to mongoDB")
     );
   }
 
   private middlewaresInput() {
     this.app.use(cors());
     this.app.use(urlencoded({ extended: true }));
+    this.app.use(json());
   }
 
   private routes() {
@@ -36,6 +38,7 @@ export default class Server {
       res.sendFile(__dirname + "/views/addChapter.html");
     });
     this.app.use("/api/books", bookRoute);
+    this.app.use("/api/user", userRoute);
   }
 
   private middlewaresOutput() {
