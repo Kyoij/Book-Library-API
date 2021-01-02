@@ -1,9 +1,7 @@
-import JWTR from "jwt-redis";
-import redis from "redis";
+import jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
 import { secret } from "../config/index.config";
-
-const jwtr = new JWTR(redis.createClient());
+import JWT from "../models/JWT.model";
 
 declare global {
   namespace Express {
@@ -17,14 +15,12 @@ export default function authenticateToken(req: Request, res: Response, next: Nex
   let authHeader = req.headers["authorization"] as string | undefined;
   let authToken = authHeader?.split(" ")[1];
   if (!authToken) return res.status(401).end();
-  jwtr
-    .verify(authToken, secret)
-    .then((user: any) => {
-      console.log(user.id);
-      req.user = user;
+  jwt.verify(authToken, secret, (err, decoded: any) => {
+    if (err) return res.status(403).end();
+    JWT.findById(decoded.jti, (errr, jwt_t) => {
+      if (errr || !jwt_t) return res.status(403).end();
+      req.user = decoded;
       next();
-    })
-    .catch((err) => {
-      res.status(403).end();
     });
+  });
 }

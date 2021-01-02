@@ -22,6 +22,7 @@ export default class Server {
     mongoose.connect(mongo_url, { useUnifiedTopology: true, useNewUrlParser: true }, () =>
       console.log("✅ connected to mongoDB")
     );
+    mongoose.set("useFindAndModify", false);
   }
 
   private middlewaresInput() {
