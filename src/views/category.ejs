@@ -68,11 +68,11 @@
           body: urlencoded,
           redirect: "follow",
         };
-        console.log(requestOptions.body.toString());
         fetch("/api/category/add", requestOptions)
           .then((res) => res.text())
           .then((msg) => {
             alert(msg);
+            console.log(`Thêm thể loại "${e.target.name.value}" thành công`);
             e.target.reset();
           });
       };
