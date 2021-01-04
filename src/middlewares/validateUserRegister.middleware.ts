@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
-import { join } from "path";
 
 const schema = Joi.object({
   name: Joi.string().min(2).alphanum().required(),

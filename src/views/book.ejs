@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
+    <title>Book Library</title>
+  </head>
+  <body>
+    <div class="bg-gray-200 min-h-screen pt-2 font-mono">
+      <div class="container mx-auto">
+        <div class="inputs w-full max-w-2xl p-6 mx-auto">
+          <h2 class="text-2xl text-gray-900">Account Setting</h2>
+          <form class="mt-6 border-t border-gray-400 pt-4" autocomplete="off">
+            <div class="flex flex-wrap -mx-3 mb-6">
+              <div class="w-full md:w-full px-3 mb-6">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="name"
+                  >name</label
+                >
+                <input
+                  class="appearance-none block w-full bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none focus:border-gray-500"
+                  id="name"
+                  type="text"
+                  placeholder="Enter book name"
+                  required
+                />
+              </div>
+              <div class="w-full md:w-full px-3 mb-6">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="author"
+                  >author</label
+                >
+                <input
+                  class="appearance-none block w-full bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none focus:border-gray-500"
+                  id="author"
+                  type="text"
+                  placeholder="Enter author"
+                  required
+                />
+              </div>
+              <div class="w-full md:w-full px-3 mb-6">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="image"
+                  >image</label
+                >
+                <input
+                  class="appearance-none block w-full bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none focus:border-gray-500"
+                  id="image"
+                  type="url"
+                  placeholder="Enter image url"
+                  required
+                />
+              </div>
+              <div class="w-full md:w-full px-3 mb-6">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="price"
+                  >price</label
+                >
+                <input
+                  class="appearance-none block w-full bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none focus:border-gray-500"
+                  id="price"
+                  type="number"
+                  placeholder="Enter author"
+                  required
+                />
+              </div>
+              <div class="w-full md:w-full px-3 mb-6">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="description"
+                  >Description</label
+                >
+                <textarea
+                  id="description"
+                  name="description"
+                  class="bg-gray-100 rounded-md border leading-normal w-full py-2 px-3 shadow-inner border border-gray-400 font-medium focus:outline-none focus:bg-white"
+                  rows="15"
+                  placeholder="Enter the description"
+                  required
+                ></textarea>
+              </div>
+              <div class="w-full md:w-full px-3 mb-6">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">category</label>
+                <div class="flex-shrink w-full inline-block relative">
+                  <select
+                    id="select"
+                    class="block appearance-none text-gray-600 w-full bg-white border border-gray-400 shadow-inner px-4 py-2 pr-8 rounded"
+                  >
+                    <option>[add a category]</option>
+                    <% categories.forEach(category=>{ %>
+                    <option value="<%= category.id%>"><%=category.name%></option>
+                    <%})%>
+                  </select>
+                  <div class="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="flex justify-between w-full mt-3 items-start">
+                  <p id="out" class="mr-6"></p>
+                  <button
+                    class="appearance-none bg-gray-200 text-gray-900 px-2 py-1 shadow-sm border border-gray-400 rounded-md mr-3"
+                    type="button"
+                    id="add-btn"
+                  >
+                    add
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-end w-full">
+              <button
+                class="appearance-none bg-gray-200 text-gray-900 px-2 py-1 shadow-sm border border-gray-400 rounded-md mr-3"
+                type="submit"
+              >
+                submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script>
+      var categories = [];
+      var names = [];
+      var out = document.getElementById("out");
+      var options = document.getElementById("select").options;
+      var selector = document.getElementById("select");
+      //add event
+      document.getElementById("add-btn").onclick = () => {
+        if (selector.selectedIndex === 0) return;
+        if (!categories.includes(selector.value)) {
+          categories.push(selector.value);
+          names.push(options[selector.selectedIndex].text);
+          out.innerText = names;
+        }
+      };
+
+      //submit event
+      document.forms[0].onsubmit = (e) => {
+        e.preventDefault();
+        if (categories.length === 0) return;
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+          name: e.target.name.value,
+          author: e.target.author.value,
+          image: e.target.image.value,
+          description: e.target.description.value,
+          categories,
+          price: e.target.price.value,
+        });
+
+        var requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow",
+        };
+
+        fetch("/api/book/add", requestOptions)
+          .then((res) => res.text())
+          .then((msg) => {
+            alert(msg);
+            e.target.reset();
+            out.innerText = "";
+          });
+      };
+    </script>
+  </body>
+</html>

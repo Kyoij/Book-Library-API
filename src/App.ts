@@ -4,8 +4,9 @@ import cors from "cors";
 import notFound from "./middlewares/notFound.middleware";
 import mongoose from "mongoose";
 import bookRoute from "./routes/book.route";
-import { emitWarning } from "process";
 import userRoute from "./routes/user.route";
+import categoryRoute from "./routes/category.route";
+import viewRoute from "./routes/view.route";
 
 export default class Server {
   private app: Application;
@@ -23,6 +24,9 @@ export default class Server {
       console.log("✅ connected to mongoDB")
     );
     mongoose.set("useFindAndModify", false);
+
+    this.app.set("view engine", "ejs");
+    this.app.set("views", process.cwd() + "/src/views");
   }
 
   private middlewaresInput() {
@@ -32,14 +36,10 @@ export default class Server {
   }
 
   private routes() {
-    this.app.use("/addbook", (req, res) => {
-      res.sendFile(__dirname + "/views/addBook.html");
-    });
-    this.app.use("/addchapter", (req, res) => {
-      res.sendFile(__dirname + "/views/addChapter.html");
-    });
-    this.app.use("/api/books", bookRoute);
+    this.app.use("/api/book", bookRoute);
     this.app.use("/api/user", userRoute);
+    this.app.use("/api/category", categoryRoute);
+    this.app.use("/", viewRoute);
   }
 
   private middlewaresOutput() {
