@@ -22,19 +22,18 @@ const BookSchema = new Schema({
 });
 
 BookSchema.pre<IBook>("save", function (next) {
-  if (this.isNew) {
-    this.categories.forEach((categoryId) => {
-      Category.findByIdAndUpdate(categoryId, { $inc: { count: 1 } }, { new: true })
-        .then((category) => {
-          console.log(`[addBook] ${category?.name} has ${category?.count} books`);
-          next();
-        })
-        .catch((err) => {
-          console.log("[addBook] err");
-          next(err);
-        });
-    });
-  }
+  if (!this.isNew) return next();
+  this.categories.forEach((categoryId) => {
+    Category.findByIdAndUpdate(categoryId, { $inc: { count: 1 } }, { new: true })
+      .then((category) => {
+        console.log(`[addBook] ${category?.name} has ${category?.count} books`);
+        next();
+      })
+      .catch((err) => {
+        console.log("[addBook] err");
+        next(err);
+      });
+  });
 });
 
 const Book = model<IBook>("books", BookSchema);

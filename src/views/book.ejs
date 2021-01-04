@@ -129,9 +129,7 @@
       </div>
     </div>
     <script>
-      var str = `<%-JSON.stringify(categories)%>`;
-      str = str.replace(/\n/gi, `\\n`);
-      var list = JSON.parse(str).map((x) => ({ name: x.name, _id: x._id }));
+      var list = JSON.parse(`<%-JSON.stringify(categories)%>`);
       var categories = [];
       var names = [];
       var out = document.getElementById("out");

@@ -23,7 +23,9 @@ export default class Server {
     mongoose.connect(mongo_url, { useUnifiedTopology: true, useNewUrlParser: true }, () =>
       console.log("✅ connected to mongoDB")
     );
+    mongoose.set("useNewUrlParser", true);
     mongoose.set("useFindAndModify", false);
+    mongoose.set("useCreateIndex", true);
 
     this.app.set("view engine", "ejs");
     this.app.set("views", process.cwd() + "/src/views");

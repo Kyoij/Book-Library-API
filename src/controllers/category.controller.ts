@@ -6,6 +6,7 @@ export function addCategory(req: Request, res: Response) {
   new Category({ name: req.body.name, description: req.body.description }).save();
   res.json({ status: "ok", msg: "add category successful" });
 }
+
 export function getAllCategory(req: Request, res: Response) {
   Category.find({})
     .then((categorys) => {
