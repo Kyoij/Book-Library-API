@@ -1,10 +1,12 @@
-import { Document, model, Schema } from "mongoose";
+import { Document, model, Schema, Types } from "mongoose";
 import { Tracing } from "trace_events";
 
 interface IUser extends Document {
   name: string;
   email: string;
   password: string;
+  books: Types.ObjectId[];
+  balance: number;
 }
 
 export const userSchema = new Schema({

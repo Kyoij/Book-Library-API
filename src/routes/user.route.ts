@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { userInfo, userLogin, userLogout, userRegister } from "../controllers/user.controller";
+import { buyBook, userInfo, userLogin, userLogout, userRegister } from "../controllers/user.controller";
 import authenticateToken from "../middlewares/authenticateToken.middleware";
 import validateUserRegister from "../middlewares/validateUserRegister.middleware";
 
@@ -12,5 +12,7 @@ userRoute.post("/login", userLogin);
 userRoute.get("/logout", authenticateToken, userLogout);
 
 userRoute.post("/register", validateUserRegister, userRegister);
+
+userRoute.post("/buy", authenticateToken, buyBook);
 
 export default userRoute;

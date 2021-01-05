@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Book from "../models/book.model";
 import Chapter from "../models/chapter.model";
 import { Types } from "mongoose";
+import User from "../models/user.model";
 
 export function getAllBook(req: Request, res: Response) {
   Book.find()
@@ -58,9 +59,24 @@ export function addChapter(req: Request, res: Response) {
 
 export function getBook(req: Request, res: Response) {
   Book.findById(req.params.id)
-    .then((book) => {
-      if (book) return res.json({ status: "ok", payload: book });
-      res.json({ status: "er" });
+    .then(async (book) => {
+      if (!book) return res.json({ status: "er", msg: "bookId not found" });
+      let user = await User.findById(req.user.id);
+      if (!user!.books.includes(Types.ObjectId(req.params.id)))
+        return res.json({ status: "er", msg: "user doesn't own this book" });
+      res.json({ status: "ok", payload: book });
     })
-    .catch(() => res.json({ status: "er" }));
+    .catch(() => res.json({ status: "er", msg: "bookId not found" }));
 }
+
+export const getChapter = (req: Request, res: Response) => {
+  Chapter.findById(req.params.id)
+    .then(async (chapter) => {
+      if (!chapter) return res.json({ status: "er", msg: "Id not found" });
+      let user = await User.findById(req.user.id);
+      if (!user!.books.includes(Types.ObjectId(chapter.bookId)))
+        return res.json({ status: "er", msg: "user doesn't own this book" });
+      return res.json({ status: "ok", payload: chapter });
+    })
+    .catch(() => res.json({ status: "er", msg: "Id not found" }));
+};

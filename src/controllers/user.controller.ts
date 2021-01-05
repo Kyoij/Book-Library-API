@@ -1,9 +1,11 @@
+import { Types } from "mongoose";
 import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import User from "../models/user.model";
 import { secret } from "../config/index.config";
 import JWT from "../models/JWT.model";
 import bcrypt from "bcrypt";
+import Book from "../models/book.model";
 
 export const userLogin = async (req: Request, res: Response) => {
   let user = await User.findOne({ email: req.body.email });
@@ -32,4 +34,24 @@ export const userRegister = async (req: Request, res: Response) => {
   if (user) return res.json({ status: "err", msg: "Email already exists" });
   new User({ ...req.body, password: bcrypt.hashSync(req.body.password, 10) }).save();
   res.json({ status: "ok", msg: "Register successful" });
+};
+
+export const buyBook = (req: Request, res: Response) => {
+  Book.findById(req.body.bookId)
+    .then((book) => {
+      if (!book) return res.json({ status: "err", msg: "bookId not found" });
+      User.findById(req.user.id).then((user) => {
+        if (user!.balance < book.price) return res.json({ status: "err", msg: "insufficient balance" });
+        if (user!.books.includes(req.body.bookId))
+          return res.json({ status: "err", msg: "user already have this book" });
+        user!.books.push(Types.ObjectId(req.body.bookId));
+        user!.balance -= book.price;
+        user!.save().then(() => {
+          res.json({ status: "ok", msg: "buy book successful" });
+        });
+      });
+    })
+    .catch(() => {
+      res.json({ status: "err", msg: "bookId not found" });
+    });
 };
