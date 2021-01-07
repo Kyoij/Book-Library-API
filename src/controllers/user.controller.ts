@@ -17,7 +17,7 @@ export const userLogin = async (req: Request, res: Response) => {
 };
 
 export const userInfo = async (req: Request, res: Response) => {
-  let user = await User.findOne({ _id: req.user.id }, "name email");
+  let user = await User.findOne({ _id: req.user.id }, "name email balance");
   if (!user) return res.json({ status: "err", msg: "User doesn't exist" });
   res.json({ status: "ok", payload: user });
 };
