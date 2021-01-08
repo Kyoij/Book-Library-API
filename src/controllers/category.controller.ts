@@ -2,8 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import Category from "../models/category.model";
 
 export function addCategory(req: Request, res: Response) {
-  if (!req.body.name || !req.body.description) return res.json({ status: "err", msg: "add category unsuccessful" });
-  new Category({ name: req.body.name, description: req.body.description }).save();
+  if (!req.body.name || !req.body.description || !req.body.image)
+    return res.json({ status: "err", msg: "add category unsuccessful" });
+  new Category({ name: req.body.name, image: req.body.image, description: req.body.description }).save();
   res.json({ status: "ok", msg: "add category successful" });
 }
 

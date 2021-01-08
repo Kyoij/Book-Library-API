@@ -46,6 +46,8 @@ export const buyBook = (req: Request, res: Response) => {
           return res.json({ status: "err", msg: "user already have this book" });
         user!.books.push(Types.ObjectId(req.body.bookId));
         user!.balance -= book.price;
+        book.bought++;
+        book.save();
         user!.save().then(() => {
           res.json({ status: "ok", msg: "buy book successful" });
         });

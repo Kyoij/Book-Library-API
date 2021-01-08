@@ -3,6 +3,7 @@ import Category from "./category.model";
 
 interface IBook extends Document {
   name: string;
+  bought: number;
   author: string;
   image: string;
   description: string;
@@ -13,6 +14,7 @@ interface IBook extends Document {
 
 const BookSchema = new Schema({
   name: { type: String, required: true },
+  bought: { type: Number, default: 0 },
   author: { type: String, required: true },
   image: { type: String, required: true },
   description: { type: String, required: true },

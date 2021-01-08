@@ -80,3 +80,26 @@ export const getChapter = (req: Request, res: Response) => {
     })
     .catch(() => res.json({ status: "er", msg: "Id not found" }));
 };
+
+export function getRecommeded(req: Request, res: Response) {
+  Book.find()
+    .sort({ bought: -1 })
+    .limit(10)
+    .then((books) => {
+      res.json({ status: "ok", payload: books });
+    })
+    .catch(() => {
+      res.json({ status: "err" });
+    });
+}
+export function getNewBooks(req: Request, res: Response) {
+  Book.find()
+    .sort({ _id: -1 })
+    .limit(10)
+    .then((books) => {
+      res.json({ status: "ok", payload: books });
+    })
+    .catch(() => {
+      res.json({ status: "err" });
+    });
+}
