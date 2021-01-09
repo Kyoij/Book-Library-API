@@ -18,7 +18,7 @@ const ChapterSchema = new Schema({
 ChapterSchema.index({ bookId: 1 });
 
 ChapterSchema.pre<IChapter>("validate", function (next) {
-  if (!this.isNew) return;
+  if (!this.isNew) return next();
   Chapter.find({ bookId: this.bookId })
     .then((chapters) => {
       this.number = chapters.length + 1;
