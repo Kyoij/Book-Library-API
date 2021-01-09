@@ -10,8 +10,20 @@ export function addCategory(req: Request, res: Response) {
 
 export function getAllCategory(req: Request, res: Response) {
   Category.find({})
-    .then((categorys) => {
-      res.json({ status: "ok", payload: categorys });
+    .then((categories) => {
+      res.json({ status: "ok", payload: categories });
+    })
+    .catch(() => {
+      res.json({ status: "err" });
+    });
+}
+
+export function getTopCategory(req: Request, res: Response) {
+  Category.find()
+    .sort({ count: -1 })
+    .limit(10)
+    .then((categories) => {
+      res.json({ status: "ok", payload: categories });
     })
     .catch(() => {
       res.json({ status: "err" });
