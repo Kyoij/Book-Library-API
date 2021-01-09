@@ -6,6 +6,7 @@ import { secret } from "../config/index.config";
 import JWT from "../models/JWT.model";
 import bcrypt from "bcrypt";
 import Book from "../models/book.model";
+import LastRead from "../models/lastRead.model";
 
 export const userLogin = async (req: Request, res: Response) => {
   let user = await User.findOne({ email: req.body.email });
@@ -48,6 +49,7 @@ export const buyBook = (req: Request, res: Response) => {
         user!.balance -= book.price;
         book.bought++;
         book.save();
+        new LastRead({ userId: user?._id, bookId: book._id }).save();
         user!.save().then(() => {
           res.json({ status: "ok", msg: "buy book successful" });
         });

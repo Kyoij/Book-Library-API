@@ -3,6 +3,7 @@ import Book from "../models/book.model";
 import Chapter from "../models/chapter.model";
 import { Types } from "mongoose";
 import User from "../models/user.model";
+import LastRead from "../models/lastRead.model";
 
 export function getAllBook(req: Request, res: Response) {
   Book.find()
@@ -74,8 +75,13 @@ export const getChapter = (req: Request, res: Response) => {
     .then(async (chapter) => {
       if (!chapter) return res.json({ status: "er", msg: "Id not found" });
       let user = await User.findById(req.user.id);
-      if (!user!.books.includes(Types.ObjectId(chapter.bookId)))
-        return res.json({ status: "er", msg: "user doesn't own this book" });
+      if (!user!.books.includes(chapter.bookId)) return res.json({ status: "er", msg: "user doesn't own this book" });
+      LastRead.findOne({ userId: req.user.id, bookId: chapter.bookId }).then((lastread) => {
+        if (!lastread) return;
+        lastread.reading = chapter.number;
+        console.log(chapter.number);
+        lastread.save();
+      });
       return res.json({ status: "ok", payload: chapter });
     })
     .catch(() => res.json({ status: "er", msg: "Id not found" }));

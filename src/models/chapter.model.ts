@@ -1,16 +1,16 @@
-import { Schema, Document, model } from "mongoose";
+import { Types, Schema, Document, model } from "mongoose";
 import Book from "./book.model";
 
 interface IChapter extends Document {
   name: string;
-  bookId: string;
+  bookId: Types.ObjectId;
   number: number;
   content: string;
 }
 
 const ChapterSchema = new Schema({
   name: { type: String, required: true },
-  bookId: { type: String, required: true, index: true },
+  bookId: { type: Types.ObjectId, required: true, index: true },
   number: { type: Number, required: true },
   content: { type: String, required: true },
 });
