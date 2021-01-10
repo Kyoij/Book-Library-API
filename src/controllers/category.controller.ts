@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
+import Book from "../models/book.model";
 import Category from "../models/category.model";
+import { Types } from "mongoose";
 
 export function addCategory(req: Request, res: Response) {
   if (!req.body.name || !req.body.description || !req.body.image)
@@ -31,10 +33,10 @@ export function getTopCategory(req: Request, res: Response) {
 }
 
 export function getCategory(req: Request, res: Response) {
-  Category.findById(req.query.id)
-    .then((category) => {
-      if (category) return res.json({ status: "ok", payload: category });
-      res.json({ status: "err", msg: "not found" });
+  console.log(req.query.id);
+  Book.find({ categories: Types.ObjectId(req.query.id as string) })
+    .then((books: any) => {
+      res.json({ status: "ok", payload: books });
     })
     .catch(() => {
       res.json({ status: "err", msg: "not found" });

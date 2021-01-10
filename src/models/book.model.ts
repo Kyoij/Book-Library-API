@@ -1,4 +1,4 @@
-import { Document, model, Schema } from "mongoose";
+import { Document, model, Schema, Types } from "mongoose";
 import Category from "./category.model";
 
 interface IBook extends Document {
@@ -7,7 +7,7 @@ interface IBook extends Document {
   author: string;
   image: string;
   description: string;
-  categories: string[];
+  categories: Types.ObjectId[];
   price: number;
   chapters: string[];
 }
