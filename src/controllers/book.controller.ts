@@ -62,9 +62,6 @@ export function getBook(req: Request, res: Response) {
   Book.findById(req.params.id)
     .then(async (book) => {
       if (!book) return res.json({ status: "er", msg: "bookId not found" });
-      let user = await User.findById(req.user.id);
-      if (!user!.books.includes(Types.ObjectId(req.params.id)))
-        return res.json({ status: "er", msg: "user doesn't own this book" });
       res.json({ status: "ok", payload: book });
     })
     .catch(() => res.json({ status: "er", msg: "bookId not found" }));
