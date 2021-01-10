@@ -106,3 +106,12 @@ export function getNewBooks(req: Request, res: Response) {
       res.json({ status: "err" });
     });
 }
+export function getAllChapterByBookId(req: Request, res: Response) {
+  Chapter.find({ bookId: req.params.id })
+    .then((chapters) => {
+      res.json({ status: "ok", payload: chapters });
+    })
+    .catch(() => {
+      res.json({ status: "err" });
+    });
+}

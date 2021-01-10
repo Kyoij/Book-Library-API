@@ -3,6 +3,7 @@ import {
   addBook,
   addChapter,
   getAllBook,
+  getAllChapterByBookId,
   getBook,
   getChapter,
   getNewBooks,
@@ -23,6 +24,8 @@ bookRoute.get("/top", authenticateToken, getRecommeded);
 bookRoute.post("/addchapter", addChapter);
 
 bookRoute.get("/chapter/:id", authenticateToken, getChapter);
+
+bookRoute.get("/chapters/:id", authenticateToken, getAllChapterByBookId);
 
 bookRoute.get("/:id", authenticateToken, getBook);
 
