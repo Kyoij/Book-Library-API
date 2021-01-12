@@ -115,3 +115,20 @@ export function getAllChapterByBookId(req: Request, res: Response) {
       res.json({ status: "err" });
     });
 }
+export function getLastRead(req: Request, res: Response) {
+  LastRead.find({ userId: req.user.id })
+    .sort({ updateAt: -1 })
+    .limit(3)
+    .then(async (lastreads) => {
+      let bs = await Book.find({ _id: { $in: lastreads.map((i) => i.bookId) } });
+      let books = lastreads.map((x) => bs.find((b) => b.id === x.bookId.toHexString()));
+      res.json({ status: "ok", payload: books });
+    });
+}
+export function getOwnBook(req: Request, res: Response) {
+  User.findById(req.user.id).then(async (user) => {
+    let bs = await Book.find({ _id: { $in: user?.books } });
+    let books = user?.books.map((x) => bs.find((b) => b.id === x.toHexString()));
+    res.json({ status: "ok", payload: books?.reverse() });
+  });
+}
